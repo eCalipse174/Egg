@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RarityCalculator : MonoBehaviour
@@ -26,11 +27,39 @@ public class RarityCalculator : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}");
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}");
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}");
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}");
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}");
+        var items = ItemManager.Instance.AllItems;
+
+        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}\n");
+
+        //foreach (var item in ItemManager.Instance.GetItemIdsByTier(0))
+        //{
+        //    Debug.Log(item);
+        //}
+
+        foreach (var i in ItemManager.Instance.GetItemIdsByTier(0).ToList())
+            Debug.Log(items[i].Egg_Name + items[i].ID.ToString());
+
+        int id;
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(0).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name} {items[id].Tier}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(1).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(2).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(3).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(4).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(5).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(6).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(7).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(8).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
+        id = Roll(ItemManager.Instance.GetItemIdsByTier(9).ToList(), GetItemWeight);
+        Debug.Log($"{items[id].Egg_Name}");
     }
 
     private void Update()
@@ -93,12 +122,15 @@ public class RarityCalculator : MonoBehaviour
     private double GetTierWeight(Tier tier)
     {
         return TierRarityCalc(
-            GameManager.Instance.UserInfo.enhance_level,
+            /*GameManager.Instance.UserInfo.enhance_level*/100,
             tier.unlockLevel,
             tier.rarityBase0,
             tier.rarityBase100
         );
     }
 
-    //private double GetItemWeight()
+    private double GetItemWeight(int id)
+    {
+        return ItemManager.Instance.GetItemById(id).Weight;
+    }
 }

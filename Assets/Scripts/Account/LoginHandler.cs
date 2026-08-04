@@ -11,7 +11,7 @@ public class LoginHandler : MonoBehaviour
 
     private string deviceId;
 
-    void Start()
+    public void TryLogin()
     {
         deviceId = SystemInfo.deviceUniqueIdentifier;
 
@@ -30,7 +30,7 @@ public class LoginHandler : MonoBehaviour
                 currentUserData = response.list[0];
                 currentUserId = currentUserData.id;
                 Debug.Log("기존 유저 로그인, Id: " + currentUserId);
-                GameManager.Instance.RegisterInfo(currentUserData);
+                RegisterAndStart();
             }
             else
             {
@@ -62,7 +62,13 @@ public class LoginHandler : MonoBehaviour
             currentUserId = newUser.id;
             nicknameInputPanel.SetActive(false);
             Debug.Log("새 유저 생성 완료, Id: " + currentUserId);
-            GameManager.Instance.RegisterInfo(currentUserData);
+            RegisterAndStart();
         });
+    }
+
+    private void RegisterAndStart()
+    {
+        GameManager.Instance.RegisterInfo(currentUserData);
+        FadeSceneManager.Instance.LoadScene("MainScene");
     }
 }

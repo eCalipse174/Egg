@@ -1,16 +1,26 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TitleScene : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private LoginHandler loginHandler;
+    [SerializeField] private List<Button> buttons;
+    [SerializeField] private Button startButton;
+    [SerializeField] private Button quitButton;
+
+    public void GameStartButton()
     {
-        
+        loginHandler.TryLogin();
+        startButton.interactable = false;
+        quitButton.interactable = false;
+        //foreach (var button in buttons) 
+        //    button.interactable = false;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void QuitButton()
     {
-        
+        StartCoroutine(GameManager.Instance.SaveAndQuit());
     }
 }

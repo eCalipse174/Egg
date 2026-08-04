@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct Tier
+public class Tier
 {
     public TierName id;
     public string name;
