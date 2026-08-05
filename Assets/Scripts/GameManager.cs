@@ -49,10 +49,14 @@ public class GameManager : MonoBehaviour
     public void SignIn()
     {
         isSignIn = true;
-        playTimeSeconds = UserInfo.play_time_seconds;
+        playTimeSeconds = userInfo.play_time_seconds;
         ItemManager.Instance.LoadAllItems
             (() =>
             Debug.Log("아이템 캐시 준비 완료")
+            );
+        InventoryManager.Instance.LoadInventory(userInfo.id, userInfo.inventory_capacity,
+            () =>
+            Debug.Log("인벤토리 준비 완료")
             );
     }
 

@@ -29,43 +29,30 @@ public class RarityCalculator : MonoBehaviour
     {
         var items = ItemManager.Instance.AllItems;
 
-        Debug.Log($"{Roll(tierList.list, GetTierWeight).name} / {temprarity:F10}\n");
-
-        //foreach (var item in ItemManager.Instance.GetItemIdsByTier(0))
-        //{
-        //    Debug.Log(item);
-        //}
-
-        foreach (var i in ItemManager.Instance.GetItemIdsByTier(0).ToList())
-            Debug.Log(items[i].Egg_Name + items[i].ID.ToString());
-
-        int id;
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(0).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name} {items[id].Tier}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(1).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(2).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(3).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(4).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(5).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(6).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(7).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(8).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
-        id = Roll(ItemManager.Instance.GetItemIdsByTier(9).ToList(), GetItemWeight);
-        Debug.Log($"{items[id].Egg_Name}");
+        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
+        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
+        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
+        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
+        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
     }
 
-    private void Update()
+    public Item Gacha()
     {
-        if (Input.anyKeyDown)
-            Debug.Log($"{Roll(tierList.list, GetTierWeight).name} /{temprarity:F10}");
+        int tier = (int)Roll(tierList.list, GetTierWeight).id;                              //레벨 기반 티어 뽑기
+        double t1 = temprarity;
+
+        int id = Roll(ItemManager.Instance.GetItemIdsByTier(tier).ToList(), GetItemWeight); //아이템 고유 가중치 기반 아이템 뽑기
+        double t2 = temprarity;
+
+        temprarity = t1 * t2 * 100;
+        return ItemManager.Instance.GetItemById(id);
+    }
+
+    public Item Gacha(out double rarity)
+    {
+        var item = Gacha();
+        rarity = temprarity;
+        return item;
     }
 
     private double TierRarityCalc(int e, int unlockLevel, double rarityBase0, double rarityBase100)
@@ -110,7 +97,7 @@ public class RarityCalculator : MonoBehaviour
 
             if (roll <= cumulative)
             {
-                temprarity = getWeight(list[i]) / totalWeight * 100;
+                temprarity = getWeight(list[i]) / totalWeight;
                 return list[i];
             }
         }
@@ -122,7 +109,7 @@ public class RarityCalculator : MonoBehaviour
     private double GetTierWeight(Tier tier)
     {
         return TierRarityCalc(
-            /*GameManager.Instance.UserInfo.enhance_level*/100,
+            GameManager.Instance.UserInfo.enhance_level,
             tier.unlockLevel,
             tier.rarityBase0,
             tier.rarityBase100

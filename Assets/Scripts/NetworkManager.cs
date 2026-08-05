@@ -9,13 +9,13 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager Instance;
 
     private const string baseUrl = "http://localhost:8080/api/v2/tables";
-    private const string apiToken = "nc_pat_5lyCOULkWT018OjvOSm3GSFzToMFDObK19Li5BJ7";
+    private const string apiToken = "nc_pat_CWvLZe88DC0aafWZSDPRefp6hgjgnK2lnwkvVTVf";
 
     // 테이블 ID 모음 (API Docs에서 확인한 값으로 교체)
-    private const string usersTableId = "m5z2oasma8pp4h7";
-    private const string itemsTableId = "mr0i55hwgi0lxmp";
-    private const string userItemsTableId = "mtx40ii7dcjizqd";
-    private const string userCollectionsTableId = "ma7ihxjcxgh66h1";
+    private const string usersTableId = "modzj7grug18qlj";
+    private const string itemsTableId = "matr6tfj332ouoc";
+    private const string userItemsTableId = "mctr16amxbs8ay6";
+    private const string userCollectionsTableId = "mhvz39j84x8jld7";
 
     private void Awake()
     {
@@ -52,11 +52,9 @@ public class NetworkManager : MonoBehaviour
 
         yield return request.SendWebRequest();
 
-        Debug.Log("요청 URL: " + url);
-        Debug.Log("결과: " + request.result);
-        Debug.Log("에러 내용: " + request.error);
         Debug.Log("응답 코드: " + request.responseCode);
-        Debug.Log("응답 내용: " + request.downloadHandler.text);
+        Debug.Log(request.error);
+        //Debug.Log(request.downloadHandler.text);
 
         bool success = request.result == UnityWebRequest.Result.Success;
         callback(success, request.downloadHandler.text);

@@ -8,3 +8,9 @@ public class UserItems
     public int item_id;
     public int slot_index;
 }
+
+[Serializable]
+public class UserItemListResponse
+{
+    public UserItems[] list;
+}
