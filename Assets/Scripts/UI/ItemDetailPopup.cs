@@ -55,7 +55,7 @@ public class ItemDetailPopup : MonoBehaviour
         currentItemTier = EggVisualDatabase.Instance.TierList.list[(int)currentItemInfo.Tier];
         root.SetActive(true);
 
-        iconImage.sprite = icon;
+        iconImage.sprite = currentVisualInfo.Sprite;
         nameText.text = itemInfo.Egg_Name;
         nameText.font = currentVisualInfo.Font;
         nameText.color = currentVisualInfo.NameColor;

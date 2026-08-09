@@ -94,7 +94,7 @@ public class NetworkManager : MonoBehaviour
         Post(usersTableId, json, callback);
     }
 
-    public void UpdateGold(int userid, int newGold, Action<bool, string> callback)
+    public void UpdateGold(int userid, long newGold, Action<bool, string> callback)
     {
         string json = "{\"id\":" + userid + ",\"gold\":" + newGold + "}";
         Patch(usersTableId, json, callback);
@@ -169,7 +169,7 @@ public class NetworkManager : MonoBehaviour
     }
 
 
-    public void SaveUserProgress(int userid, int gold, int enhanceLevel, int gachaCount, int playTimeSeconds, Action<bool, string> callback)
+    public void SaveUserProgress(int userid, long gold, int enhanceLevel, int gachaCount, int playTimeSeconds, Action<bool, string> callback)
     {
         string json = "{\"id\":" + userid
             + ",\"gold\":" + gold

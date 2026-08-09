@@ -6,7 +6,7 @@ public class Users
     public int id;
     public int device_id;
     public string nickname;
-    public int gold;
+    public long gold;
     public int gacha_count;
     public int enhance_level;
     public int inventory_capacity;

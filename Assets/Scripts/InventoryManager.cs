@@ -11,6 +11,7 @@ public class InventoryManager : MonoBehaviour
 
     public event Action<int> OnItemSold;
     public event Action<int, bool> OnLockToggled;
+    public event Action<int> OnItemAdded;
 
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class InventoryManager : MonoBehaviour
                 newSlot.item_id = itemId;
                 newSlot.slot_index = emptySlot;
                 slots.Add(newSlot);
+                OnItemAdded?.Invoke(emptySlot);
             }
             else
             {
@@ -124,7 +126,7 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        int price = itemInfo.Price;
+        long price = itemInfo.Price;
 
         NetworkManager.Instance.RemoveItemFromInventory(target.id, (success, json) =>
         {
@@ -137,7 +139,7 @@ public class InventoryManager : MonoBehaviour
 
             slots.Remove(target);
 
-            int newGold = GameManager.Instance.UserInfo.gold + price;
+            long newGold = GameManager.Instance.UserInfo.gold + price;
             NetworkManager.Instance.UpdateGold(GameManager.Instance.UserInfo.id, newGold, (goldSuccess, goldJson) =>
             {
                 if (goldSuccess)
@@ -148,9 +150,10 @@ public class InventoryManager : MonoBehaviour
                 {
                     Debug.LogWarning("gold update failed after sell");
                 }
+
+                OnItemSold?.Invoke(slotIndex);
             });
 
-            OnItemSold?.Invoke(slotIndex);
             onComplete?.Invoke(true);
         });
     }
@@ -184,5 +187,10 @@ public class InventoryManager : MonoBehaviour
     public List<UserItems> GetAllSlots()
     {
         return slots;
+    }
+
+    public bool IsInventoryFull()
+    {
+        return FindEmptySlotIndex() == -1;
     }
 }
