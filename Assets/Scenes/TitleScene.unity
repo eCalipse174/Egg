@@ -472,9 +472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleScene
   loginHandler: {fileID: 743896460}
-  buttons:
-  - {fileID: 298564495}
-  - {fileID: 1580870765}
+  buttons: []
   startButton: {fileID: 298564497}
   quitButton: {fileID: 1580870767}
 --- !u!4 &452232579
