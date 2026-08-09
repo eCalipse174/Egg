@@ -56,7 +56,9 @@ public class InventoryUI : MonoBehaviour
 
     private Sprite LoadIconForItem(Item itemInfo)
     {
-        // Resources.Load, Addressables, 또는 딕셔너리 방식 중 원하는 걸로 구현
-        return null;
+        if (itemInfo == null) return null;
+
+        EggVisualInfo visualInfo = EggVisualDatabase.Instance.GetVisualInfo(itemInfo.id);
+        return visualInfo != null ? visualInfo.Sprite : null;
     }
 }
