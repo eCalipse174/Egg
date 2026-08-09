@@ -142,6 +142,12 @@ public class NetworkManager : MonoBehaviour
         Delete(userItemsTableId, json, callback);
     }
 
+    public void UpdateItemLock(int userItemRowid, bool isLocked, Action<bool, string> callback)
+    {
+        string json = "{\"id\":" + userItemRowid + ",\"is_locked\":" + (isLocked ? "1" : "0") + "}";
+        Patch(userItemsTableId, json, callback);
+    }
+
     // ---------- user_collections (dex) ----------
 
     public void GetCollection(int userid, Action<bool, string> callback)

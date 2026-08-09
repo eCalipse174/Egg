@@ -6,6 +6,8 @@ public class EggVisualDatabase : MonoBehaviour
     public static EggVisualDatabase Instance;
 
     [SerializeField] private EggVisualInfo[] allVisualInfos;
+    [SerializeField] private TierList tierList;
+    public TierList TierList => tierList;
 
     private Dictionary<int, EggVisualInfo> visualInfoById = new Dictionary<int, EggVisualInfo>();
 

@@ -28,12 +28,6 @@ public class RarityCalculator : MonoBehaviour
     private void Start()
     {
         var items = ItemManager.Instance.AllItems;
-
-        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
-        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
-        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
-        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
-        Debug.Log(Gacha().Egg_Name + $" {temprarity:F5}");
     }
 
     public Item Gacha()

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 5
   m_EditorClassIdentifier: Assembly-CSharp::EggVisualInfo
   id: 5
-  sprite: {fileID: -665668525, guid: 3b07bf47e0d3a79479503ab05a500e8b, type: 3}
+  sprite: {fileID: -969817675, guid: 3b07bf47e0d3a79479503ab05a500e8b, type: 3}
   nameColor: {r: 1, g: 1, b: 1, a: 1}
   font: {fileID: 12800000, guid: 39141eb1b03d8e2439865ac4cb35a048, type: 3}

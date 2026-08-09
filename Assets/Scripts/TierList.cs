@@ -10,6 +10,7 @@ public class Tier
     public double rarityBase0;
     public double rarityBase100;
     public int unlockLevel;
+    public Color color;
 }
 
 public enum TierName

@@ -18,48 +18,58 @@ MonoBehaviour:
     rarityBase0: 750000
     rarityBase100: 100000
     unlockLevel: 0
+    color: {r: 1, g: 1, b: 1, a: 1}
   - id: 1
     name: "\uB178\uBA40"
     rarityBase0: 150000
     rarityBase100: 200000
     unlockLevel: 0
+    color: {r: 0.7881483, g: 1, b: 0.5801887, a: 1}
   - id: 2
     name: "\uB808\uC5B4"
     rarityBase0: 90000
     rarityBase100: 250000
     unlockLevel: 0
+    color: {r: 0.5518868, g: 0.9763822, b: 1, a: 1}
   - id: 3
     name: "\uC5D0\uD53D"
     rarityBase0: 10000
     rarityBase100: 300000
     unlockLevel: 0
+    color: {r: 0.5769981, g: 0.4481132, b: 1, a: 1}
   - id: 4
     name: "\uC720\uB2C8\uD06C"
     rarityBase0: 10101
     rarityBase100: 101010
     unlockLevel: 5
+    color: {r: 1, g: 0, b: 0.91762197, a: 1}
   - id: 5
     name: "\uB808\uC804\uB4DC"
     rarityBase0: 2004
     rarityBase100: 40080
     unlockLevel: 20
+    color: {r: 0, g: 1, b: 0.45333344, a: 1}
   - id: 6
     name: "\uC2E0\uD654"
     rarityBase0: 100
     rarityBase100: 5000
     unlockLevel: 40
+    color: {r: 1, g: 0.77099806, b: 0.5647059, a: 1}
   - id: 7
     name: "\uC808\uB300"
     rarityBase0: 1
     rarityBase100: 200
     unlockLevel: 75
+    color: {r: 1, g: 0.9397107, b: 0, a: 1}
   - id: 8
     name: "\uC5B8\uB9AC\uBBF8\uD2F0\uB4DC"
     rarityBase0: 0.001
     rarityBase100: 2
     unlockLevel: 90
+    color: {r: 1, g: 0, b: 0, a: 1}
   - id: 9
     name: "\uBB34\uD55C"
     rarityBase0: 0.0000001
     rarityBase100: 0.0001
     unlockLevel: 99
+    color: {r: 0.3160377, g: 0.3968313, b: 1, a: 1}

@@ -24,5 +24,8 @@ public class InventorySlotUI : MonoBehaviour
         if (slotData == null) return;
         Debug.Log("클릭한 슬롯의 item_id: " + slotData.item_id);
         // 여기서 상세정보 팝업 등 원하는 동작 연결
+        UserItems userItem = InventoryManager.Instance.GetAllSlots().Find(slot => slot.slot_index == slotData.slot_index);
+        Item itemInfo = ItemManager.Instance.GetItemById(userItem.item_id);
+        ItemDetailPopup.Instance.Open(userItem, itemInfo, this.iconImage.sprite);
     }
 }

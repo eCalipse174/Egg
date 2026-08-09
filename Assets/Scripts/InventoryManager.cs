@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,28 +9,30 @@ public class InventoryManager : MonoBehaviour
     private List<UserItems> slots = new List<UserItems>();
     private int capacity;
 
+    public event Action<int> OnItemSold;
+    public event Action<int, bool> OnLockToggled;
+
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void LoadInventory(int userId, int inventoryCapacity, System.Action onComplete)
     {
         capacity = inventoryCapacity;
-
         NetworkManager.Instance.GetInventory(userId, (success, json) =>
         {
             if (success)
             {
                 UserItemListResponse response = JsonUtility.FromJson<UserItemListResponse>(json);
                 slots = new List<UserItems>(response.list);
-                Debug.Log("인벤토리 로드 완료, 슬롯 " + slots.Count + "개 사용 중");
+                Debug.Log("inventory load complete, slots used: " + slots.Count);
             }
             else
             {
-                Debug.LogWarning("인벤토리 로드 실패");
+                Debug.LogWarning("inventory load failed");
             }
-
             onComplete?.Invoke();
         });
     }
@@ -44,41 +47,34 @@ public class InventoryManager : MonoBehaviour
                 return i;
             }
         }
-        return -1; // 빈 슬롯 없음
+        return -1; // no empty slot
     }
 
     public void AddItem(int userId, int itemId, System.Action<bool> onComplete)
     {
         int emptySlot = FindEmptySlotIndex();
-
         if (emptySlot == -1)
         {
-            Debug.LogWarning("인벤토리가 가득 찼습니다");
+            Debug.LogWarning("inventory is full");
             onComplete?.Invoke(false);
             return;
         }
-
         NetworkManager.Instance.AddItemToSlot(userId, itemId, emptySlot, (success, json) =>
         {
             if (success)
             {
-                // 서버 응답(id만 있음)에서 id만 꺼내고, 나머지는 이미 알고 있는 값으로 직접 구성
                 IdOnlyResponse idResponse = JsonUtility.FromJson<IdOnlyResponse>(json);
-
                 UserItems newSlot = new UserItems();
                 newSlot.id = idResponse.id;
                 newSlot.user_id = userId;
                 newSlot.item_id = itemId;
                 newSlot.slot_index = emptySlot;
-
                 slots.Add(newSlot);
-                //Debug.Log("슬롯 " + emptySlot + "에 아이템 " + itemId + " 추가됨, 서버 id: " + newSlot.id);
             }
             else
             {
-                Debug.LogWarning("아이템 추가 실패");
+                Debug.LogWarning("add item failed");
             }
-
             onComplete?.Invoke(success);
         });
     }
@@ -86,26 +82,101 @@ public class InventoryManager : MonoBehaviour
     public void RemoveItem(int slotIndex, System.Action<bool> onComplete)
     {
         UserItems target = slots.Find(slot => slot.slot_index == slotIndex);
-
         if (target == null)
         {
-            Debug.LogWarning("해당 슬롯에 아이템이 없습니다");
+            Debug.LogWarning("no item in this slot");
             onComplete?.Invoke(false);
             return;
         }
-
         NetworkManager.Instance.RemoveItemFromInventory(target.id, (success, json) =>
         {
             if (success)
             {
                 slots.Remove(target);
-                Debug.Log("슬롯 " + slotIndex + " 아이템 제거됨");
+                Debug.Log("slot " + slotIndex + " item removed");
             }
             else
             {
-                Debug.LogWarning("아이템 제거 실패");
+                Debug.LogWarning("remove item failed");
+            }
+            onComplete?.Invoke(success);
+        });
+    }
+
+    public void SellItem(int slotIndex, System.Action<bool> onComplete)
+    {
+        UserItems target = slots.Find(slot => slot.slot_index == slotIndex);
+        if (target == null)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+        if (target.is_locked)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+
+        Item itemInfo = ItemManager.Instance.GetItemById(target.item_id);
+        if (itemInfo == null)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+
+        int price = itemInfo.Price;
+
+        NetworkManager.Instance.RemoveItemFromInventory(target.id, (success, json) =>
+        {
+            if (!success)
+            {
+                Debug.LogWarning("sell item failed");
+                onComplete?.Invoke(false);
+                return;
             }
 
+            slots.Remove(target);
+
+            int newGold = GameManager.Instance.UserInfo.gold + price;
+            NetworkManager.Instance.UpdateGold(GameManager.Instance.UserInfo.id, newGold, (goldSuccess, goldJson) =>
+            {
+                if (goldSuccess)
+                {
+                    GameManager.Instance.UserInfo.gold = newGold;
+                }
+                else
+                {
+                    Debug.LogWarning("gold update failed after sell");
+                }
+            });
+
+            OnItemSold?.Invoke(slotIndex);
+            onComplete?.Invoke(true);
+        });
+    }
+
+    public void ToggleLock(int slotIndex, System.Action<bool> onComplete)
+    {
+        UserItems target = slots.Find(slot => slot.slot_index == slotIndex);
+        if (target == null)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+
+        bool newState = !target.is_locked;
+
+        NetworkManager.Instance.UpdateItemLock(target.id, newState, (success, json) =>
+        {
+            if (success)
+            {
+                target.is_locked = newState;
+                OnLockToggled?.Invoke(slotIndex, newState);
+            }
+            else
+            {
+                Debug.LogWarning("lock toggle failed");
+            }
             onComplete?.Invoke(success);
         });
     }

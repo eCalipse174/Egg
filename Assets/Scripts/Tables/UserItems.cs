@@ -7,6 +7,8 @@ public class UserItems
     public int user_id;
     public int item_id;
     public int slot_index;
+    public bool is_locked;
+    public string obtained_at;
 }
 
 [Serializable]
