@@ -43,6 +43,11 @@ public class GameManager : MonoBehaviour
         Debug.Log(users.play_time_seconds);
     }
 
+    public void IncreaseGacha()
+    {
+        userInfo.gacha_count++;
+    }
+
 
     // ---------Account---------
 
@@ -57,6 +62,10 @@ public class GameManager : MonoBehaviour
         InventoryManager.Instance.LoadInventory(userInfo.id, userInfo.inventory_capacity,
             () =>
             Debug.Log("인벤토리 준비 완료")
+            );
+        CollectionManager.Instance.LoadCollection(userInfo.id,
+            () =>
+            Debug.Log("도감 준비 완료")
             );
     }
 

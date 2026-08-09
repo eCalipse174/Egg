@@ -60,7 +60,7 @@ public class CollectionManager : MonoBehaviour
             {
                 // server response only contains id, reconstruct the rest locally
                 IdOnlyResponse idResponse = JsonUtility.FromJson<IdOnlyResponse>(json);
-                UserCollections newEntry = new UserCollections();
+                UserCollections newEntry = new();
                 newEntry.id = idResponse.id;
                 newEntry.user_id = userId;
                 newEntry.item_id = itemId;

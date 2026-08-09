@@ -10,7 +10,7 @@ public class Item
     public string Egg_Desc;
     public TierName Tier;
     public double Weight;
-    public int Price;
+    public long price;
 
     public void Print()
     {

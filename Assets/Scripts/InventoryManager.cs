@@ -9,9 +9,15 @@ public class InventoryManager : MonoBehaviour
     private List<UserItems> slots = new List<UserItems>();
     private int capacity;
 
+    public const int MaxCapacity = 40;
+    public const int SlotUnlockCost = 10000;
+
     public event Action<int> OnItemSold;
     public event Action<int, bool> OnLockToggled;
     public event Action<int> OnItemAdded;
+    public event Action<int> OnCapacityChanged;
+
+    public int Capacity => capacity;
 
     private void Awake()
     {
@@ -126,8 +132,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        long price = itemInfo.Price;
-
         NetworkManager.Instance.RemoveItemFromInventory(target.id, (success, json) =>
         {
             if (!success)
@@ -139,7 +143,7 @@ public class InventoryManager : MonoBehaviour
 
             slots.Remove(target);
 
-            long newGold = GameManager.Instance.UserInfo.gold + price;
+            long newGold = GameManager.Instance.UserInfo.gold + itemInfo.price;
             NetworkManager.Instance.UpdateGold(GameManager.Instance.UserInfo.id, newGold, (goldSuccess, goldJson) =>
             {
                 if (goldSuccess)
@@ -192,5 +196,51 @@ public class InventoryManager : MonoBehaviour
     public bool IsInventoryFull()
     {
         return FindEmptySlotIndex() == -1;
+    }
+
+    public void UnlockNextSlot(System.Action<bool> onComplete)
+    {
+        if (capacity >= MaxCapacity)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+
+        long currentGold = GameManager.Instance.UserInfo.gold;
+        if (currentGold < SlotUnlockCost)
+        {
+            onComplete?.Invoke(false);
+            return;
+        }
+
+        long newGold = currentGold - SlotUnlockCost;
+        int newCapacity = capacity + 1;
+
+        NetworkManager.Instance.UpdateGold(GameManager.Instance.UserInfo.id, newGold, (goldSuccess, goldJson) =>
+        {
+            if (!goldSuccess)
+            {
+                Debug.LogWarning("slot unlock gold update failed");
+                onComplete?.Invoke(false);
+                return;
+            }
+
+            GameManager.Instance.UserInfo.gold = newGold;
+
+            NetworkManager.Instance.UpdateInventoryCapacity(GameManager.Instance.UserInfo.id, newCapacity, (capSuccess, capJson) =>
+            {
+                if (capSuccess)
+                {
+                    capacity = newCapacity;
+                    GameManager.Instance.UserInfo.inventory_capacity = newCapacity;
+                    OnCapacityChanged?.Invoke(newCapacity);
+                }
+                else
+                {
+                    Debug.LogWarning("inventory capacity update failed");
+                }
+                onComplete?.Invoke(capSuccess);
+            });
+        });
     }
 }

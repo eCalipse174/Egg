@@ -66,7 +66,7 @@ public class ItemDetailPopup : MonoBehaviour
         tierText.color = currentItemTier.color;
         descriptionText.text = currentItemInfo.Egg_Desc;
         obtainedAtText.text = userItem.obtained_at;
-        priceText.text = "판매(" + itemInfo.Price.ToString() + "G)";
+        priceText.text = "판매(" + itemInfo.price.ToString() + "G)";
 
         RefreshLockState(userItem.is_locked);
     }

@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EggVisualInfo
   id: 14
   sprite: {fileID: 809131221, guid: 3b07bf47e0d3a79479503ab05a500e8b, type: 3}
-  nameColor: {r: 1, g: 1, b: 1, a: 1}
+  nameColor: {r: 1, g: 0.9991248, b: 0.8443396, a: 1}
   font: {fileID: 12800000, guid: 39141eb1b03d8e2439865ac4cb35a048, type: 3}
+  cutsceneClip: {fileID: 0}

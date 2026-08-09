@@ -54,7 +54,7 @@ public class NetworkManager : MonoBehaviour
 
         Debug.Log("응답 코드: " + request.responseCode);
         Debug.Log(request.error);
-        //Debug.Log(request.downloadHandler.text);
+        Debug.Log(request.downloadHandler.text);
 
         bool success = request.result == UnityWebRequest.Result.Success;
         callback(success, request.downloadHandler.text);
@@ -106,6 +106,12 @@ public class NetworkManager : MonoBehaviour
         Patch(usersTableId, json, callback);
     }
 
+    public void UpdateInventoryCapacity(int userid, int newCapacity, Action<bool, string> callback)
+    {
+        string json = "{\"id\":" + userid + ",\"inventory_capacity\":" + newCapacity + "}";
+        Patch(usersTableId, json, callback);
+    }
+
     public void IncreaseGachaCount(int userid, int newCount, Action<bool, string> callback)
     {
         string json = "{\"id\":" + userid + ",\"gacha_count\":" + newCount + "}";
@@ -118,16 +124,18 @@ public class NetworkManager : MonoBehaviour
         Patch(usersTableId, json, callback);
     }
 
-    public void GetRanking(Action<bool, string> callback)
+    public void GetRankingByColumn(string sortColumn, int limit, Action<bool, string> callback)
     {
-        Get(usersTableId, "sort=-gold&limit=50", callback);
+        string fields = "nickname,enhance_level,equipped_egg_id," + sortColumn;
+        string query = "sort=-" + sortColumn + "&limit=" + limit + "&fields=" + fields;
+        Get(usersTableId, query, callback);
     }
 
     // ---------- user_items (inventory) ----------
 
     public void GetInventory(int userid, Action<bool, string> callback)
     {
-        Get(userItemsTableId, "where=(user_id,eq," + userid + ")", callback);
+        Get(userItemsTableId, "where=(user_id,eq," + userid + ")&limit=1000", callback);
     }
 
     public void AddItemToSlot(int userid, int itemid, int slotIndex, Action<bool, string> callback)
@@ -152,7 +160,7 @@ public class NetworkManager : MonoBehaviour
 
     public void GetCollection(int userid, Action<bool, string> callback)
     {
-        Get(userCollectionsTableId, "where=(user_id,eq," + userid + ")", callback);
+        Get(userCollectionsTableId, "where=(user_id,eq," + userid + ")&limit=1000", callback);
     }
 
     public void UnlockCollection(int userid, int itemid, Action<bool, string> callback)

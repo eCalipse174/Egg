@@ -15,4 +15,5 @@ MonoBehaviour:
   id: 92
   sprite: {fileID: 1126399485, guid: 3b07bf47e0d3a79479503ab05a500e8b, type: 3}
   nameColor: {r: 0.3584906, g: 0.10653258, b: 0.10653258, a: 1}
-  font: {fileID: 12800000, guid: 39141eb1b03d8e2439865ac4cb35a048, type: 3}
+  font: {fileID: 12800000, guid: c3e440e2959bb49489d1d98b5084034f, type: 3}
+  cutsceneClip: {fileID: 0}

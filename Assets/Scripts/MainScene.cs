@@ -38,11 +38,18 @@ public class MainScene : MonoBehaviour
             return;
         }
 
+        GameManager.Instance.IncreaseGacha();
+
         var item = RarityCalculator.Instance.Gacha(out var rarity);
         Debug.Log($"{item.Egg_Name} {rarity:F5}");
 
         EggVisualInfo visualInfo = EggVisualDatabase.Instance.GetVisualInfo(item.ID);
-        bool isNewItem = false; // TODO: wire to collection system once it exists
+        bool isNewItem = !CollectionManager.Instance.IsUnlocked(item.ID);
+
+        if (isNewItem)
+        {
+            CollectionManager.Instance.UnlockItem(item.ID, success => { });
+        }
 
         if (visualInfo != null && visualInfo.HasCutscene)
         {
@@ -78,7 +85,7 @@ public class MainScene : MonoBehaviour
 
     private void AutoSellItem(Item item)
     {
-        long newGold = GameManager.Instance.UserInfo.gold + item.Price;
+        long newGold = GameManager.Instance.UserInfo.gold + item.price;
         NetworkManager.Instance.UpdateGold(GameManager.Instance.UserInfo.id, newGold, (success, json) =>
         {
             if (success)
