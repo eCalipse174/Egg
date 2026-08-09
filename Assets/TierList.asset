@@ -44,7 +44,7 @@ MonoBehaviour:
     unlockLevel: 5
     color: {r: 1, g: 0, b: 0.91762197, a: 1}
   - id: 5
-    name: "\uB808\uC804\uB4DC"
+    name: "\uC804\uC124"
     rarityBase0: 2004
     rarityBase100: 40080
     unlockLevel: 20
