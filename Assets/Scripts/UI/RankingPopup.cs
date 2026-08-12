@@ -22,6 +22,11 @@ public class RankingPopup : MonoBehaviour
         playTimeTabButton.onClick.AddListener(() => SelectTab(RankingManager.RankingType.PlayTime));
     }
 
+    private void Start()
+    {
+        Close();
+    }
+
     public void Open()
     {
         popupRoot.SetActive(true);
@@ -59,13 +64,18 @@ public class RankingPopup : MonoBehaviour
             if (i < entries.Count)
             {
                 entrySlots[i].gameObject.SetActive(true);
-                entrySlots[i].Setup(i + 1, entries[i]);
+                entrySlots[i].Setup(i + 1, entries[i], OnEntryClicked);
             }
             else
             {
                 entrySlots[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    private void OnEntryClicked(RankingManager.RankingEntry entry)
+    {
+        UserDetailPopup.Instance.Open(entry);
     }
 
     private void ClearEntries()

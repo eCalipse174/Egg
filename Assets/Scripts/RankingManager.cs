@@ -32,12 +32,14 @@ public class RankingManager : MonoBehaviour
     [Serializable]
     private class RawEntry
     {
+        public int id;
         public string nickname;
         public int enhance_level;
         public int equipped_egg_id;
         public long gold;
         public int gacha_count;
         public int play_time_seconds;
+        public string created_at;
     }
 
     [Serializable]
@@ -48,9 +50,14 @@ public class RankingManager : MonoBehaviour
 
     public class RankingEntry
     {
+        public int id;
         public string nickname;
         public int enhance_level;
         public int equipped_egg_id;
+        public long gold;
+        public int gacha_count;
+        public int play_time_seconds;
+        public string created_at;
         public long value;
     }
 
@@ -101,9 +108,14 @@ public class RankingManager : MonoBehaviour
         foreach (RawEntry raw in response.list)
         {
             RankingEntry entry = new RankingEntry();
+            entry.id = raw.id;
             entry.nickname = raw.nickname;
             entry.enhance_level = raw.enhance_level;
             entry.equipped_egg_id = raw.equipped_egg_id;
+            entry.gold = raw.gold;
+            entry.gacha_count = raw.gacha_count;
+            entry.play_time_seconds = raw.play_time_seconds;
+            entry.created_at = raw.created_at;
             entry.value = GetValue(raw, type);
             result.Add(entry);
         }

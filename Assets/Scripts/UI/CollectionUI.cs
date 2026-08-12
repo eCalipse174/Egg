@@ -14,11 +14,25 @@ public class CollectionUI : MonoBehaviour
     [SerializeField] private Text detailTierText;
     [SerializeField] private Text detailDescriptionText;
     [SerializeField] private Text detailUnlockedAtText;
+    [SerializeField] private Button equipButton;
+    [SerializeField] private Text equipButtonText;
 
     [Space]
     [SerializeField] private Font defaultFont;
 
     private List<CollectionListEntryUI> entries = new List<CollectionListEntryUI>();
+
+    private Item currentItem;
+
+    private void OnEnable()
+    {
+        equipButton.onClick.AddListener(OnEquipButtonClicked);
+    }
+
+    private void OnDisable()
+    {
+        equipButton.onClick.RemoveListener(OnEquipButtonClicked);
+    }
 
     public void Open()
     {
@@ -77,6 +91,7 @@ public class CollectionUI : MonoBehaviour
 
     private void ShowDetail(Item item)
     {
+        currentItem = item;
         bool unlocked = CollectionManager.Instance.IsUnlocked(item.ID);
         var visualInfo = EggVisualDatabase.Instance.GetVisualInfo(item.ID);
 
@@ -93,6 +108,7 @@ public class CollectionUI : MonoBehaviour
             detailTierText.color = EggVisualDatabase.Instance.TierList.list[(int)item.Tier].color;
             detailDescriptionText.text = "???";
             detailUnlockedAtText.text = "";
+            equipButton.gameObject.SetActive(false);
             return;
         }
 
@@ -103,10 +119,26 @@ public class CollectionUI : MonoBehaviour
         detailSubtitleText.text = item.Egg_SubTitle;
         detailSubtitleText.font = visualInfo.Font;
         detailSubtitleText.color = visualInfo.NameColor;
-        detailTierText.text = EggVisualDatabase.Instance.TierList.list[(int)item.Tier].name; 
+        detailTierText.text = EggVisualDatabase.Instance.TierList.list[(int)item.Tier].name;
         detailTierText.color = EggVisualDatabase.Instance.TierList.list[(int)item.Tier].color;
         detailDescriptionText.text = item.Egg_Desc;
         detailUnlockedAtText.text = CollectionManager.Instance.GetUnlockedAt(item.ID);
+
+        equipButton.gameObject.SetActive(true);
+        UpdateEquipButtonState();
+    }
+
+    private void UpdateEquipButtonState()
+    {
+        bool isEquipped = GameManager.Instance.UserInfo.equipped_egg_id == currentItem.ID;
+        equipButton.interactable = !isEquipped;
+        equipButtonText.text = isEquipped ? "전시중" : "전시하기";
+    }
+
+    private void OnEquipButtonClicked()
+    {
+        GameManager.Instance.SetEquippedEgg(currentItem.ID);
+        UpdateEquipButtonState();
     }
 
     private Sprite GetIconForItem(Item item)

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,17 +9,32 @@ public class RankingEntryView : MonoBehaviour
     [SerializeField] private Text levelText;
     [SerializeField] private Text valueText;
     [SerializeField] private Image equippedEggIcon;
+    [SerializeField] private Button rowButton;
 
     private const int noEggEquipped = -1;
 
-    public void Setup(int rank, RankingManager.RankingEntry entry)
+    private RankingManager.RankingEntry currentEntry;
+    private Action<RankingManager.RankingEntry> onClicked;
+
+    public void Setup(int rank, RankingManager.RankingEntry entry, Action<RankingManager.RankingEntry> onClickedCallback)
     {
         rankText.text = rank.ToString();
         nicknameText.text = entry.nickname;
         levelText.text = "Lv." + entry.enhance_level;
         valueText.text = entry.value.ToString();
 
+        currentEntry = entry;
+        onClicked = onClickedCallback;
+
         SetEggIcon(entry.equipped_egg_id);
+    }
+
+    private void Awake()
+    {
+        rowButton.onClick.AddListener(() =>
+        {
+            onClicked?.Invoke(currentEntry);
+        });
     }
 
     private void SetEggIcon(int eggId)
@@ -28,6 +44,8 @@ public class RankingEntryView : MonoBehaviour
             equippedEggIcon.enabled = false;
             return;
         }
+
+        equippedEggIcon.sprite = EggVisualDatabase.Instance.GetVisualInfo(eggId).Sprite;
 
         equippedEggIcon.enabled = true;
 

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MainScene : MonoBehaviour
 {
     [SerializeField] private Text gold;
+    [SerializeField] private SpriteRenderer equippedEgg;
 
     private bool autoGachaRunning;
 
@@ -14,6 +15,9 @@ public class MainScene : MonoBehaviour
         UpdateGold(0);
         InventoryManager.Instance.OnItemSold += UpdateGold;
         EnhanceManager.Instance.OnEnhanceLevelChanged += UpdateGold;
+
+        OnEquippedEggChanged(GameManager.Instance.UserInfo.equipped_egg_id);
+        GameManager.Instance.OnEquippedEggChanged += OnEquippedEggChanged;
 
         Setting.Instance.OnAutoGachaChanged += HandleAutoGachaChanged;
         if (Setting.Instance.AutoGachaEnabled)
@@ -68,6 +72,11 @@ public class MainScene : MonoBehaviour
         }
 
         ShowPresentation(item, visualInfo);
+    }
+
+    public void OnEquippedEggChanged(int itemId)
+    {
+        equippedEgg.sprite = EggVisualDatabase.Instance.GetVisualInfo(itemId).Sprite;
     }
 
     private void ShowPresentation(Item item, EggVisualInfo visualInfo)

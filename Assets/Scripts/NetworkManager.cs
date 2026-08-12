@@ -8,7 +8,7 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager Instance;
 
-    private const string baseUrl = "http://localhost:8080/api/v2/tables";
+    private const string baseUrl = "http://58.232.15.112:18080/api/v2/tables";
     private const string apiToken = "nc_pat_CWvLZe88DC0aafWZSDPRefp6hgjgnK2lnwkvVTVf";
 
     // 테이블 ID 모음 (API Docs에서 확인한 값으로 교체)
@@ -126,7 +126,7 @@ public class NetworkManager : MonoBehaviour
 
     public void GetRankingByColumn(string sortColumn, int limit, Action<bool, string> callback)
     {
-        string fields = "nickname,enhance_level,equipped_egg_id," + sortColumn;
+        string fields = "id,nickname,enhance_level,equipped_egg_id,gold,gacha_count,play_time_seconds,created_at";
         string query = "sort=-" + sortColumn + "&limit=" + limit + "&fields=" + fields;
         Get(usersTableId, query, callback);
     }
@@ -154,6 +154,12 @@ public class NetworkManager : MonoBehaviour
     {
         string json = "{\"id\":" + userItemRowid + ",\"is_locked\":" + (isLocked ? "1" : "0") + "}";
         Patch(userItemsTableId, json, callback);
+    }
+
+    public void UpdateEquippedEgg(int userid, int itemid, Action<bool, string> callback)
+    {
+        string json = "{\"id\":" + userid + ",\"equipped_egg_id\":" + itemid + "}";
+        Patch(usersTableId, json, callback);
     }
 
     // ---------- user_collections (dex) ----------

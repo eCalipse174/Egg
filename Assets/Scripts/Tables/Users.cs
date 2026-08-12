@@ -12,4 +12,5 @@ public class Users
     public int inventory_capacity;
     public int play_time_seconds;
     public string created_at;
+    public int equipped_egg_id;
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class GameManager : MonoBehaviour
 
     private Users userInfo;
     public Users UserInfo => userInfo;
+
+    public event Action<int> OnEquippedEggChanged;
 
     private bool isSignIn;
     private double playTimeSeconds;
@@ -46,6 +49,20 @@ public class GameManager : MonoBehaviour
     public void IncreaseGacha()
     {
         userInfo.gacha_count++;
+    }
+
+    public void SetEquippedEgg(int itemId)
+    {
+        UserInfo.equipped_egg_id = itemId;
+        OnEquippedEggChanged?.Invoke(itemId);
+
+        NetworkManager.Instance.UpdateEquippedEgg(UserInfo.id, itemId, (success, response) =>
+        {
+            if (!success)
+            {
+                Debug.Log("장착 알 서버 반영 실패: " + response);
+            }
+        });
     }
 
 
