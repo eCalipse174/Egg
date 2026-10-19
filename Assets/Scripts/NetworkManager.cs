@@ -8,10 +8,8 @@ public class NetworkManager : MonoBehaviour
 {
     public static NetworkManager Instance;
 
-    private const string baseUrl = "http://58.232.15.112:18080/api/v2/tables";
-    private const string apiToken = "nc_pat_CWvLZe88DC0aafWZSDPRefp6hgjgnK2lnwkvVTVf";
+    private const string baseUrl = "http://localhost:8080/api/v2/tables";
 
-    // 테이블 ID 모음 (API Docs에서 확인한 값으로 교체)
     private const string usersTableId = "modzj7grug18qlj";
     private const string itemsTableId = "matr6tfj332ouoc";
     private const string userItemsTableId = "mctr16amxbs8ay6";
@@ -48,13 +46,14 @@ public class NetworkManager : MonoBehaviour
             request.SetRequestHeader("Content-Type", "application/json");
         }
 
-        request.SetRequestHeader("xc-token", apiToken);
+        request.SetRequestHeader("xc-token", ApiConfig.Data.token);
 
         yield return request.SendWebRequest();
 
         Debug.Log("응답 코드: " + request.responseCode);
         Debug.Log(request.error);
         Debug.Log(request.downloadHandler.text);
+        Debug.Log("REQUEST URL: " + url);
 
         bool success = request.result == UnityWebRequest.Result.Success;
         callback(success, request.downloadHandler.text);
